@@ -93,14 +93,14 @@ func OnGetForm(w http.ResponseWriter, r *http.Request) {
 	form_type := r.URL.Query()["form_type"][0]
 	protocol_type := r.URL.Query()["protocol_type"][0]
 	// 如果请求参数protocol_type不等于MODBUS_RTU或MODBUS_TCP，返回空
-	if protocol_type != "MODBUS_RTU" && protocol_type != "MODBUS_TCP" {
+	if protocol_type != "MODBUS_RTU" && protocol_type != "MODBUS_TCP" && protocol_type != "Modbus TCP" {
 		RspError(w, errors.New("not support protocol type"))
 		return
 	}
 	//CFG配置表单 VCR凭证表单 VCRT凭证类型表单
 	switch form_type {
 	case "CFG":
-		if device_type == "3" {
+		if device_type == "3" || device_type == "1" {
 			// 子设备配置表单
 			RspSuccess(w, readFormConfigByPath("./form_config.json"))
 		} else {

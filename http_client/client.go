@@ -19,6 +19,7 @@ func Init() {
 	client = tpprotocolsdkgo.NewClient(addr)
 	go ServiceHeartbeat1()
 	go ServiceHeartbeat2()
+	go ServiceHeartbeat3()
 }
 
 func GetDeviceConfig(voucher string, deviceID string) (*api.DeviceConfigResponse, error) {
@@ -77,6 +78,31 @@ func ServiceHeartbeat2() {
 // 这里需要改为自己的服务
 func reportHeartbeat2() error {
 	sid := viper.GetString("server.identifier2")
+	serviceHeartbeatReq := api.HeartbeatRequest{
+		ServiceIdentifier: sid,
+	}
+	response, err := client.API.Heartbeat(serviceHeartbeatReq)
+	if err != nil {
+		return fmt.Errorf("服务心跳上报失败 (请求参数：%+v): %v", serviceHeartbeatReq, err)
+	}
+	if response.Code != 200 {
+		return fmt.Errorf("服务心跳上报失败 (请求参数：%+v): %v", serviceHeartbeatReq, response.Message)
+	}
+	return nil
+}
+
+func ServiceHeartbeat3() {
+	for {
+		err := reportHeartbeat3()
+		if err != nil {
+			log.Println(err)
+		}
+		time.Sleep(50 * time.Second)
+	}
+}
+
+func reportHeartbeat3() error {
+	sid := viper.GetString("server.identifier3")
 	serviceHeartbeatReq := api.HeartbeatRequest{
 		ServiceIdentifier: sid,
 	}

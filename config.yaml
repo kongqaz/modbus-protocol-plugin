@@ -2,6 +2,7 @@ server:
   address: 0.0.0.0:502 #服务地址
   identifier1: MODBUS_RTU
   identifier2: MODBUS_TCP
+  identifier3: Modbus TCP
 
 mqtt:
   broker: 127.0.0.1:1883 #mqtt服务端地址
